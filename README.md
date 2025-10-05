@@ -61,12 +61,22 @@ Once installed and configured:
    cd SoulStrikeFloatingMenu
    ```
 
-2. **Build the project**
+2. **Setup Gradle Wrapper** (if not already present)
+   ```bash
+   # On Linux/Mac
+   chmod +x setup-gradle.sh
+   ./setup-gradle.sh
+   
+   # On Windows
+   setup-gradle.bat
+   ```
+
+3. **Build the project**
    ```bash
    ./gradlew build
    ```
 
-3. **Generate APK**
+4. **Generate APK**
    ```bash
    ./gradlew assembleRelease
    ```
