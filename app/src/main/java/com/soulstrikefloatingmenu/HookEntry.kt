@@ -16,7 +16,7 @@ import de.robv.android.xposed.XposedHelpers
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 
 class HookEntry : IXposedHookLoadPackage {
-    private var imguiMenu: ImGuiMenu? = null
+    private var floatingMenu: SimpleFloatingMenu? = null
 
     override fun handleLoadPackage(lpparam: XC_LoadPackage.LoadPackageParam) {
         if (lpparam.packageName != "com.com2usholdings.soulstrike.android.google.global.normal") {
@@ -37,8 +37,8 @@ class HookEntry : IXposedHookLoadPackage {
                         activity.javaClass.name.contains("GameActivity") ||
                         activity.javaClass.name.contains("UnityPlayerActivity")) {
                         
-                        XposedBridge.log("SoulStrikeFloatingMenu: Activity created, showing ImGui menu")
-                        showImGuiMenu(activity)
+                        XposedBridge.log("SoulStrikeFloatingMenu: Activity created, showing floating menu")
+                        showFloatingMenu(activity)
                     }
                 }
             }
@@ -54,8 +54,8 @@ class HookEntry : IXposedHookLoadPackage {
                 object : XC_MethodHook() {
                     override fun afterHookedMethod(param: MethodHookParam) {
                         val activity = param.thisObject as Activity
-                        XposedBridge.log("SoulStrikeFloatingMenu: Unity activity created, showing ImGui menu")
-                        showImGuiMenu(activity)
+                        XposedBridge.log("SoulStrikeFloatingMenu: Unity activity created, showing floating menu")
+                        showFloatingMenu(activity)
                     }
                 }
             )
@@ -79,15 +79,15 @@ class HookEntry : IXposedHookLoadPackage {
         hookGameFunctions(lpparam)
     }
 
-    private fun showImGuiMenu(context: Context) {
+    private fun showFloatingMenu(context: Context) {
         try {
-            if (imguiMenu == null) {
-                imguiMenu = ImGuiMenu(context)
-                imguiMenu?.show()
-                XposedBridge.log("SoulStrikeFloatingMenu: ImGui menu created and shown")
+            if (floatingMenu == null) {
+                floatingMenu = SimpleFloatingMenu(context)
+                floatingMenu?.show()
+                XposedBridge.log("SoulStrikeFloatingMenu: Floating menu created and shown")
             }
         } catch (e: Exception) {
-            XposedBridge.log("SoulStrikeFloatingMenu: Error showing ImGui menu: ${e.message}")
+            XposedBridge.log("SoulStrikeFloatingMenu: Error showing floating menu: ${e.message}")
         }
     }
 

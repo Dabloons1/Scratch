@@ -41,15 +41,15 @@ dependencies {
     implementation 'com.google.android.material:material:1.10.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     
-    // ImGui for Android - using correct repository
-    implementation 'io.github.spair:imgui-java:1.86.11'
-    implementation 'io.github.spair:imgui-java-natives-android:1.86.11'
+    // ImGui for Android - using alternative approach
+    // Note: ImGui dependencies will be added manually or via local JARs
+    // For now, we'll create a simple floating window without ImGui
     
     // OpenGL ES for ImGui - using correct package
     // Note: OpenGL is part of Android framework, no separate dependency needed
     
-    // LSPosed API - using alternative approach
-    compileOnly 'de.robv.android.xposed:api:82'
+    // LSPosed API - using local source files
+    // Note: Xposed API classes are now included in the source
     
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'

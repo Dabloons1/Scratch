@@ -22,12 +22,7 @@
 
 # Keep Xposed hook classes
 -keep class com.soulstrikefloatingmenu.HookEntry { *; }
--keep class com.soulstrikefloatingmenu.ImGuiMenu { *; }
+-keep class com.soulstrikefloatingmenu.SimpleFloatingMenu { *; }
 
-# Keep ImGui classes
--keep class imgui.** { *; }
--dontwarn imgui.**
-
-# Keep OpenGL classes
--keep class javax.microedition.khronos.** { *; }
--keep class android.opengl.** { *; }
+# Keep Xposed API classes
+-keep class de.robv.android.xposed.** { *; }
