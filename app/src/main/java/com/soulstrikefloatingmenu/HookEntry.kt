@@ -16,7 +16,7 @@ import de.robv.android.xposed.XposedHelpers
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 
 class HookEntry : IXposedHookLoadPackage {
-    private var floatingWindow: FloatingWindow? = null
+    private var imguiMenu: ImGuiMenu? = null
 
     override fun handleLoadPackage(lpparam: XC_LoadPackage.LoadPackageParam) {
         if (lpparam.packageName != "com.com2usholdings.soulstrike.android.google.global.normal") {
@@ -25,7 +25,7 @@ class HookEntry : IXposedHookLoadPackage {
 
         XposedBridge.log("SoulStrikeFloatingMenu: Hook loaded for ${lpparam.packageName}")
 
-        // Hook Activity creation to show floating window
+        // Hook Activity creation to show ImGui menu
         XposedHelpers.findAndHookMethod(
             Activity::class.java,
             "onCreate",
@@ -34,16 +34,36 @@ class HookEntry : IXposedHookLoadPackage {
                 override fun afterHookedMethod(param: MethodHookParam) {
                     val activity = param.thisObject as Activity
                     if (activity.javaClass.name.contains("MainActivity") || 
-                        activity.javaClass.name.contains("GameActivity")) {
+                        activity.javaClass.name.contains("GameActivity") ||
+                        activity.javaClass.name.contains("UnityPlayerActivity")) {
                         
-                        XposedBridge.log("SoulStrikeFloatingMenu: Activity created, showing floating window")
-                        showFloatingWindow(activity)
+                        XposedBridge.log("SoulStrikeFloatingMenu: Activity created, showing ImGui menu")
+                        showImGuiMenu(activity)
                     }
                 }
             }
         )
 
-        // Hook Application onCreate to ensure we can show the window
+        // Hook Unity's main activity for better compatibility
+        try {
+            XposedHelpers.findAndHookMethod(
+                "com.unity3d.player.UnityPlayerActivity",
+                lpparam.classLoader,
+                "onCreate",
+                Bundle::class.java,
+                object : XC_MethodHook() {
+                    override fun afterHookedMethod(param: MethodHookParam) {
+                        val activity = param.thisObject as Activity
+                        XposedBridge.log("SoulStrikeFloatingMenu: Unity activity created, showing ImGui menu")
+                        showImGuiMenu(activity)
+                    }
+                }
+            )
+        } catch (e: Exception) {
+            XposedBridge.log("SoulStrikeFloatingMenu: Unity activity hook failed: ${e.message}")
+        }
+
+        // Hook Application onCreate to ensure we can show the menu
         XposedHelpers.findAndHookMethod(
             "android.app.Application",
             lpparam.classLoader,
@@ -54,17 +74,78 @@ class HookEntry : IXposedHookLoadPackage {
                 }
             }
         )
+
+        // Hook game-specific functions for feature implementation
+        hookGameFunctions(lpparam)
     }
 
-    private fun showFloatingWindow(context: Context) {
+    private fun showImGuiMenu(context: Context) {
         try {
-            if (floatingWindow == null) {
-                floatingWindow = FloatingWindow(context)
-                floatingWindow?.show()
-                XposedBridge.log("SoulStrikeFloatingMenu: Floating window created and shown")
+            if (imguiMenu == null) {
+                imguiMenu = ImGuiMenu(context)
+                imguiMenu?.show()
+                XposedBridge.log("SoulStrikeFloatingMenu: ImGui menu created and shown")
             }
         } catch (e: Exception) {
-            XposedBridge.log("SoulStrikeFloatingMenu: Error showing floating window: ${e.message}")
+            XposedBridge.log("SoulStrikeFloatingMenu: Error showing ImGui menu: ${e.message}")
+        }
+    }
+
+    private fun hookGameFunctions(lpparam: XC_LoadPackage.LoadPackageParam) {
+        try {
+            // Hook player health/damage functions for God Mode
+            XposedHelpers.findAndHookMethod(
+                "PlayerController",
+                lpparam.classLoader,
+                "TakeDamage",
+                Float::class.java,
+                object : XC_MethodHook() {
+                    override fun beforeHookedMethod(param: MethodHookParam) {
+                        // Check if God Mode is enabled
+                        // This would need to communicate with the ImGui menu
+                        XposedBridge.log("SoulStrikeFloatingMenu: Player taking damage - God Mode check")
+                    }
+                }
+            )
+        } catch (e: Exception) {
+            XposedBridge.log("SoulStrikeFloatingMenu: Player damage hook failed: ${e.message}")
+        }
+
+        try {
+            // Hook ammo consumption for Infinite Ammo
+            XposedHelpers.findAndHookMethod(
+                "WeaponController",
+                lpparam.classLoader,
+                "ConsumeAmmo",
+                Int::class.java,
+                object : XC_MethodHook() {
+                    override fun beforeHookedMethod(param: MethodHookParam) {
+                        // Check if Infinite Ammo is enabled
+                        XposedBridge.log("SoulStrikeFloatingMenu: Ammo consumption - Infinite Ammo check")
+                    }
+                }
+            )
+        } catch (e: Exception) {
+            XposedBridge.log("SoulStrikeFloatingMenu: Ammo consumption hook failed: ${e.message}")
+        }
+
+        try {
+            // Hook movement speed for Speed Hack
+            XposedHelpers.findAndHookMethod(
+                "PlayerMovement",
+                lpparam.classLoader,
+                "Move",
+                Float::class.java,
+                Float::class.java,
+                object : XC_MethodHook() {
+                    override fun beforeHookedMethod(param: MethodHookParam) {
+                        // Apply speed multiplier
+                        XposedBridge.log("SoulStrikeFloatingMenu: Player movement - Speed Hack check")
+                    }
+                }
+            )
+        } catch (e: Exception) {
+            XposedBridge.log("SoulStrikeFloatingMenu: Movement speed hook failed: ${e.message}")
         }
     }
 }

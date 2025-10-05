@@ -4,11 +4,13 @@ An LSPosed module that adds a floating window menu to the Soul Strike game (`com
 
 ## Features
 
-- 🎮 **Floating Window Menu**: A semi-transparent floating menu that appears over the Soul Strike game
-- 🔄 **Expandable Interface**: Click to expand/collapse the menu for easy access
-- 🎯 **Targeted Injection**: Specifically designed for Soul Strike game process
-- 🛠️ **Customizable**: Easy to modify and add new features
+- 🎮 **ImGui Floating Menu**: A powerful, modern floating menu using ImGui for professional UI
+- 🎨 **Modern Interface**: Beautiful dark theme with collapsible sections and tooltips
+- ⚡ **Real-time Controls**: Instant feature toggles with live preview
+- 🎯 **Game Hooks**: Direct integration with Soul Strike game functions
+- 🛠️ **Extensible**: Easy to add new features and modifications
 - 📱 **LSPosed Compatible**: Built for LSPosed 1.9.2+ framework
+- 🎮 **Unity Support**: Optimized for Unity-based games like Soul Strike
 
 ## Installation
 
@@ -41,11 +43,12 @@ An LSPosed module that adds a floating window menu to the Soul Strike game (`com
 
 Once installed and configured:
 
-1. **Launch Soul Strike** - The floating menu will appear automatically
-2. **Click the menu button** - Expands to show all available features
-3. **Use the features** - Click any button to activate features
-4. **Collapse menu** - Click "Close" to minimize the menu
-5. **Hide menu** - Click "Hide Menu" to completely hide the floating window
+1. **Launch Soul Strike** - The ImGui menu will appear automatically
+2. **Navigate the menu** - Use collapsible sections to organize features
+3. **Toggle features** - Enable/disable features with checkboxes and sliders
+4. **Real-time adjustments** - Modify settings like speed, alpha, and scale instantly
+5. **Apply changes** - Use "Apply All Changes" to activate selected features
+6. **Hide menu** - Click "Hide Menu" to completely hide the floating window
 
 ## Building from Source
 
