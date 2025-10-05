@@ -32,20 +32,17 @@ jobs:
         path: |
           ~/.gradle/caches
           ~/.gradle/wrapper
+          ~/.gradle/configuration-cache
         key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
         restore-keys: |
           ${{ runner.os }}-gradle-
 
-    - name: Setup Gradle Wrapper
+    - name: Generate Gradle Wrapper and Build
       run: |
         gradle wrapper --gradle-version 8.4
         chmod +x ./gradlew
-
-    - name: Build with Gradle
-      run: ./gradlew build
-
-    - name: Build APK
-      run: ./gradlew assembleRelease
+        ./gradlew build
+        ./gradlew assembleRelease
 
     - name: Upload APK artifact
       uses: actions/upload-artifact@v4
